@@ -26,3 +26,8 @@ export function ensureDir(dir) {
 export function firstExisting(candidates) {
   return candidates.find((candidate) => fs.existsSync(candidate) && fs.statSync(candidate).isFile());
 }
+
+export function runNeu(args) {
+  const neu = path.join(root, "node_modules", "@neutralinojs", "neu", "bin", "neu.js");
+  run(process.execPath, [neu, ...args]);
+}

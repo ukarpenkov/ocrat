@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { ensureDir, firstExisting, readConfig, root, run } from "./common.mjs";
+import { ensureDir, firstExisting, readConfig, root, run, runNeu } from "./common.mjs";
 import { png } from "./icons.mjs";
 
 const config = readConfig();
@@ -73,6 +73,6 @@ const zip = path.join(release, `ocrat-${version}-mac-arm64.app.zip`);
 run("hdiutil", ["create", "-volname", "ocrat", "-srcfolder", dmgRoot, "-ov", "-format", "UDZO", dmg]);
 run("ditto", ["--norsrc", "--noextattr", "--noqtn", "--noacl", "-c", "-k", "--keepParent", app, zip], { COPYFILE_DISABLE: "1" });
 
-run("neu", ["builder", "dmg", "--arm64"]);
+runNeu(["builder", "dmg", "--arm64"]);
 console.log(dmg);
 console.log(zip);

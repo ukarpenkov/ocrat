@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { ensureDir, firstExisting, readConfig, root, run } from "./common.mjs";
+import { ensureDir, firstExisting, readConfig, root, run, runNeu } from "./common.mjs";
 
 const config = readConfig();
 const version = config.version;
@@ -80,6 +80,6 @@ Section "Uninstall"
 SectionEnd
 `);
 run("makensis", [nsi]);
-run("neu", ["builder", "nsis", "--x64"]);
+runNeu(["builder", "nsis", "--x64"]);
 console.log(zip);
 console.log(setup);

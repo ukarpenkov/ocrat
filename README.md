@@ -46,4 +46,4 @@ npm run package:win
 
 ## Релиз
 
-Тег `v1.0.0` запускает [.github/workflows/release.yml](.github/workflows/release.yml). macOS arm64 собирается на `macos-14`, Windows x64 на `windows-2022`.
+Тег `v1.0.0` запускает [.github/workflows/release.yml](.github/workflows/release.yml). macOS arm64 собирается на `macos-15` (образ `macos-14` снят), Windows x64 на `windows-2022`.
