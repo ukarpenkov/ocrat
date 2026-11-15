@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' blob: data:; style-src 'self'; script-src 'self'">
+  <title>ocrat</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>ocrat</h1>
+    <button type="button" id="theme" aria-pressed="false">Светлая</button>
+  </header>
+  <p id="error" role="alert"></p>
+  <main>
+    <section class="pane">
+      <div id="drop" tabindex="0" role="button" aria-label="Изображение. Нажмите, чтобы выбрать файл">
+        <img id="preview" alt="" hidden>
+        <p id="hint">Вставьте снимок, перетащите файл или выберите его</p>
+      </div>
+      <button type="button" id="recognize" disabled>Распознать</button>
+    </section>
+    <section class="pane">
+      <textarea id="result" spellcheck="false" aria-label="Распознанный текст"></textarea>
+      <button type="button" id="copy" disabled>Копировать</button>
+    </section>
+  </main>
+  <script src="js/neutralino.js"></script>
+  <script src="js/main.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+:root {
+  --bg: #ffffff;
+  --fg: #000000;
+  --line: #8e8e8e;
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  --bg: #000000;
+  --fg: #ffffff;
+  --line: #8e8e8e;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+h1 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+button,
+textarea {
+  font: inherit;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 0;
+}
+
+button {
+  padding: 8px 16px;
+}
+
+button:focus-visible,
+textarea:focus-visible,
+#drop:focus-visible {
+  outline: 1px solid var(--line);
+  outline-offset: 2px;
+}
+
+button:active:not(:disabled) {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+button:disabled {
+  color: var(--line);
+  border-color: var(--line);
+}
+
+#error {
+  min-height: 1.4em;
+  margin: 0;
+  padding: 8px 12px 0;
+}
+
+#error:empty {
+  padding-top: 0;
+}
+
+main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.pane {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px;
+}
+
+#drop {
+  flex: 1;
+  align-self: stretch;
+  min-height: 0;
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#drop.dragover {
+  outline: 1px solid var(--fg);
+  outline-offset: -2px;
+}
+
+#preview {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+#hint {
+  margin: 0;
+  padding: 16px;
+  text-align: center;
+}
+
+textarea {
+  flex: 1;
+  align-self: stretch;
+  min-height: 0;
+  width: 100%;
+  resize: none;
+  padding: 8px;
+  overflow: auto;
+}

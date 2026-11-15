@@ -1,0 +1,93 @@
+{
+  "applicationId": "js.ocrat.app",
+  "applicationName": "ocrat",
+  "version": "1.0.0",
+  "author": "ocrat",
+  "description": "Local OCR for a screenshot or image file",
+  "copyright": "Copyright (c) 2026 ocrat",
+  "defaultMode": "window",
+  "port": 0,
+  "documentRoot": "/resources/",
+  "url": "/",
+  "enableServer": false,
+  "enableNativeAPI": true,
+  "tokenSecurity": "one-time",
+  "dataLocation": "system",
+  "logging": {
+    "enabled": false,
+    "writeToLogFile": false
+  },
+  "nativeAllowList": [
+    "storage.getData",
+    "storage.setData",
+    "filesystem.createDirectory",
+    "filesystem.remove",
+    "filesystem.copy",
+    "filesystem.writeBinaryFile",
+    "filesystem.readBinaryFile",
+    "filesystem.getStats",
+    "filesystem.getAbsolutePath",
+    "filesystem.getNormalizedPath",
+    "filesystem.getPathParts",
+    "filesystem.getJoinedPath",
+    "os.spawnProcess",
+    "os.updateSpawnedProcess",
+    "os.getPath",
+    "os.showOpenDialog",
+    "clipboard.getFormat",
+    "clipboard.readImage",
+    "clipboard.writeText"
+  ],
+  "commandAllowList": [
+    "*ocrat-ocr",
+    "*ocrat-ocr.exe"
+  ],
+  "modes": {
+    "window": {
+      "title": "ocrat",
+      "width": 960,
+      "height": 720,
+      "minWidth": 640,
+      "minHeight": 480,
+      "resizable": true,
+      "icon": "/resources/icons/appIcon.png",
+      "enableInspector": false,
+      "exitProcessOnClose": true,
+      "borderless": false,
+      "maximize": false,
+      "hidden": false
+    }
+  },
+  "cli": {
+    "binaryName": "ocrat",
+    "resourcesPath": "/resources/",
+    "extensionsPath": "/extensions/",
+    "clientLibrary": "/resources/js/neutralino.js",
+    "binaryVersion": "6.10.0",
+    "clientVersion": "6.10.0",
+    "builder": {
+      "mac": {
+        "targets": [
+          {
+            "target": "dmg",
+            "arch": ["arm64"],
+            "output": "dist/builder-mac",
+            "icon": "resources/icons/icon.icns",
+            "description": "Local OCR"
+          }
+        ]
+      },
+      "windows": {
+        "targets": [
+          {
+            "target": "nsis",
+            "arch": ["x64"],
+            "output": "dist/builder-win",
+            "icon": "resources/icons/icon.ico",
+            "description": "Local OCR"
+          }
+        ]
+      }
+    }
+  }
+}

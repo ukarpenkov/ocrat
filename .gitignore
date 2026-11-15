@@ -1,0 +1,10 @@
+node_modules/
+resources/js/neutralino.js
+bin/
+dist/
+.storage/
+.neu-builder-staging/
+adapters/macos/.build/
+adapters/windows/build/
+.DS_Store
+*.log

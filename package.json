@@ -1,0 +1,17 @@
+{
+  "name": "ocrat",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local desktop OCR for macOS Apple Silicon and Windows x64",
+  "scripts": {
+    "adapter:mac": "swift build -c release --package-path adapters/macos && mkdir -p bin && cp adapters/macos/.build/release/ocrat-ocr bin/ocrat-ocr && chmod +x bin/ocrat-ocr",
+    "dev": "npm run adapter:mac && neu run",
+    "build": "neu build --embed-resources",
+    "icons": "node packaging/icons.mjs",
+    "package:mac": "node packaging/macos.mjs",
+    "package:win": "node packaging/windows.mjs"
+  },
+  "devDependencies": {
+    "@neutralinojs/neu": "11.8.0"
+  }
+}

@@ -1,0 +1,84 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  macos:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm ci
+      - run: npm run icons
+      - run: npm run adapter:mac
+      - run: npx neu update
+      - run: npx neu plugins --add @neutralinojs-contrib/builder
+      - run: npm run build
+      - run: npm run package:mac
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          if-no-files-found: error
+          path: dist/release/
+
+  windows:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install NSIS
+        shell: pwsh
+        run: |
+          choco install nsis -y
+          "C:\Program Files (x86)\NSIS" | Out-File -FilePath $env:GITHUB_PATH -Append
+      - run: npm ci
+      - run: npm run icons
+      - run: pwsh packaging/build-windows-adapter.ps1
+      - run: npx neu update
+      - run: npx neu plugins --add @neutralinojs-contrib/builder
+      - run: npm run build
+      - run: npm run package:win
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          if-no-files-found: error
+          path: dist/release/
+
+  publish:
+    needs: [macos, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist/release
+          merge-multiple: true
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          find dist/release -type f -print
+          sed 's/^          //' > release-notes.md <<EOF
+          ocrat ${version}
+
+          - macOS Apple Silicon: DMG and a zipped .app
+          - Windows x64: portable zip and an NSIS installer
+
+          The builds are unsigned. Gatekeeper and SmartScreen warn before a downloaded copy starts. CI produced the packages; they were not launch-checked.
+          EOF
+          mapfile -t files < <(find dist/release -type f -print)
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "ocrat ${version}" \
+            --notes-file release-notes.md \
+            "${files[@]}"
