@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
 import { ensureDir, firstExisting, readConfig, root, run, runNeu } from "./common.mjs";
-import { png } from "./icons.mjs";
 
 const config = readConfig();
 const version = config.version;
@@ -51,7 +50,7 @@ fs.writeFileSync(path.join(contents, "Info.plist"), `<?xml version="1.0" encodin
 const iconset = path.join(stage, "icon.iconset");
 ensureDir(iconset);
 const source = path.join(root, "resources", "icons", "icon-source.png");
-if (!fs.existsSync(source)) fs.writeFileSync(source, png(1024));
+if (!fs.existsSync(source)) throw new Error(`Missing ${source}. Run npm run icons after adding the icon artwork.`);
 for (const size of [16, 32, 128, 256, 512]) {
   run("sips", ["-z", String(size), String(size), source, "--out", path.join(iconset, `icon_${size}x${size}.png`)]);
   run("sips", ["-z", String(size * 2), String(size * 2), source, "--out", path.join(iconset, `icon_${size}x${size}@2x.png`)]);
@@ -60,6 +59,9 @@ const icns = path.join(root, "resources", "icons", "icon.icns");
 run("iconutil", ["-c", "icns", iconset, "-o", icns]);
 fs.copyFileSync(icns, path.join(resources, "icon.icns"));
 run("xattr", ["-cr", app]);
+run("codesign", ["--force", "--sign", "-", path.join(macos, "ocrat-ocr")]);
+run("codesign", ["--force", "--sign", "-", path.join(macos, "ocrat")]);
+run("codesign", ["--force", "--sign", "-", app]);
 
 const dmgRoot = path.join(stage, "dmg");
 ensureDir(dmgRoot);

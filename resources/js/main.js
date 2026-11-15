@@ -158,7 +158,16 @@ function bind() {
   result.addEventListener("input", syncCopy);
 }
 
+function closeApp() {
+  // Closing from the native close callback hits dispatch_sync on the main queue and aborts.
+  const finish = window.NL_OS === "Darwin"
+    ? () => Neutralino.app.killProcess()
+    : () => Neutralino.app.exit();
+  setTimeout(finish, 100);
+}
+
 Neutralino.init();
+Neutralino.events.on("windowClose", closeApp);
 startAdapterEvents();
 bind();
 loadTheme();

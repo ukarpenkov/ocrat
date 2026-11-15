@@ -9,7 +9,7 @@
   "port": 0,
   "documentRoot": "/resources/",
   "url": "/",
-  "enableServer": false,
+  "enableServer": true,
   "enableNativeAPI": true,
   "tokenSecurity": "one-time",
   "dataLocation": "system",
@@ -36,7 +36,9 @@
     "os.showOpenDialog",
     "clipboard.getFormat",
     "clipboard.readImage",
-    "clipboard.writeText"
+    "clipboard.writeText",
+    "app.exit",
+    "app.killProcess"
   ],
   "commandAllowList": [
     "*ocrat-ocr",
@@ -52,7 +54,7 @@
       "resizable": true,
       "icon": "/resources/icons/appIcon.png",
       "enableInspector": false,
-      "exitProcessOnClose": true,
+      "exitProcessOnClose": false,
       "borderless": false,
       "maximize": false,
       "hidden": false
