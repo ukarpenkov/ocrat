@@ -41,7 +41,7 @@ const quote = (value) => value.replaceAll("/", "\\");
 fs.writeFileSync(nsi, `Unicode true
 !include "MUI2.nsh"
 
-Name "ocrat"
+Name "OCRat"
 OutFile "${quote(setup)}"
 InstallDir "$PROGRAMFILES64\\ocrat"
 RequestExecutionLevel admin
@@ -60,10 +60,10 @@ Section
   SetOutPath "$INSTDIR"
   File "${quote(appExe)}"
   File "${quote(adapterExe)}"
-  CreateDirectory "$SMPROGRAMS\\ocrat"
-  CreateShortcut "$SMPROGRAMS\\ocrat\\ocrat.lnk" "$INSTDIR\\ocrat.exe"
+  CreateDirectory "$SMPROGRAMS\\OCRat"
+  CreateShortcut "$SMPROGRAMS\\OCRat\\OCRat.lnk" "$INSTDIR\\ocrat.exe"
   WriteUninstaller "$INSTDIR\\Uninstall.exe"
-  WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${config.applicationId}" "DisplayName" "ocrat"
+  WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${config.applicationId}" "DisplayName" "OCRat"
   WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${config.applicationId}" "DisplayVersion" "${version}"
   WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${config.applicationId}" "Publisher" "ocrat"
   WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${config.applicationId}" "UninstallString" "$INSTDIR\\Uninstall.exe"
@@ -74,8 +74,8 @@ Section "Uninstall"
   Delete "$INSTDIR\\ocrat-ocr.exe"
   Delete "$INSTDIR\\Uninstall.exe"
   RMDir "$INSTDIR"
-  Delete "$SMPROGRAMS\\ocrat\\ocrat.lnk"
-  RMDir "$SMPROGRAMS\\ocrat"
+  Delete "$SMPROGRAMS\\OCRat\\OCRat.lnk"
+  RMDir "$SMPROGRAMS\\OCRat"
   DeleteRegKey HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${config.applicationId}"
 SectionEnd
 `);

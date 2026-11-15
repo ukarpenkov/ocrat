@@ -6,7 +6,7 @@ import { materialize, removeTemp } from "./temp.js";
 
 const drop = document.querySelector("#drop");
 const preview = document.querySelector("#preview");
-const hint = document.querySelector("#hint");
+const placeholder = document.querySelector("#placeholder");
 const recognize = document.querySelector("#recognize");
 const result = document.querySelector("#result");
 const copy = document.querySelector("#copy");
@@ -35,7 +35,7 @@ function setImage(blob, next) {
   source = next;
   preview.src = previewUrl;
   preview.hidden = false;
-  hint.hidden = true;
+  placeholder.hidden = true;
   recognize.disabled = false;
   clearError();
 }
@@ -122,11 +122,6 @@ function bind() {
   drop.addEventListener("click", () => {
     openFile();
   });
-  drop.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    event.preventDefault();
-    openFile();
-  });
   document.addEventListener("dragover", (event) => {
     event.preventDefault();
     if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
@@ -166,8 +161,31 @@ function closeApp() {
   setTimeout(finish, 100);
 }
 
-Neutralino.init();
-Neutralino.events.on("windowClose", closeApp);
-startAdapterEvents();
+function bindChrome() {
+  const stop = (event) => event.stopPropagation();
+  document.querySelector("#close").addEventListener("click", (event) => {
+    stop(event);
+    closeApp();
+  });
+  document.querySelector("#minimize").addEventListener("click", (event) => {
+    stop(event);
+    Neutralino.window.minimize();
+  });
+  document.querySelector("#zoom").addEventListener("click", async (event) => {
+    stop(event);
+    if (await Neutralino.window.isMaximized()) await Neutralino.window.unmaximize();
+    else await Neutralino.window.maximize();
+  });
+  Neutralino.window.setDraggableRegion("titlebar", {
+    exclude: ["traffic", "theme"]
+  });
+}
+
 bind();
-loadTheme();
+if (window.NL_PORT) {
+  Neutralino.init();
+  Neutralino.events.on("windowClose", closeApp);
+  startAdapterEvents();
+  bindChrome();
+  loadTheme();
+}

@@ -197,15 +197,66 @@ function quiet(command, args) {
   if (result.status !== 0) throw new Error(`${command} ${args.join(" ")} failed (${result.status})`);
 }
 
-function writeIcns(source, destination) {
+function pow5(value) {
+  return value * value * value * value * value;
+}
+
+function squircleCover(x, y, size) {
+  const x0 = (x / size) * 2 - 1;
+  const x1 = ((x + 1) / size) * 2 - 1;
+  const y0 = (y / size) * 2 - 1;
+  const y1 = ((y + 1) / size) * 2 - 1;
+  const farX = Math.max(Math.abs(x0), Math.abs(x1));
+  const farY = Math.max(Math.abs(y0), Math.abs(y1));
+  if (pow5(farX) + pow5(farY) <= 1) return 1;
+  const nearX = Math.min(Math.abs(x0), Math.abs(x1));
+  const nearY = Math.min(Math.abs(y0), Math.abs(y1));
+  if (pow5(nearX) + pow5(nearY) >= 1) return 0;
+  const samples = 3;
+  let cover = 0;
+  for (let sy = 0; sy < samples; sy += 1) {
+    for (let sx = 0; sx < samples; sx += 1) {
+      const px = Math.abs(((x + (sx + 0.5) / samples) / size) * 2 - 1);
+      const py = Math.abs(((y + (sy + 0.5) / samples) / size) * 2 - 1);
+      if (pow5(px) + pow5(py) <= 1) cover += 1;
+    }
+  }
+  return cover / (samples * samples);
+}
+
+function applySquircle(rgba, size) {
+  const out = Buffer.from(rgba);
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      const cover = squircleCover(x, y, size);
+      if (cover === 1) continue;
+      const index = (y * size + x) * 4 + 3;
+      out[index] = Math.round(out[index] * cover);
+    }
+  }
+  return out;
+}
+
+function rounded(rgba, width, height, size) {
+  return applySquircle(resize(rgba, width, height, size, size), size);
+}
+
+function writeIcns(rgba, width, height, destination) {
   if (process.platform !== "darwin") return;
   const parent = fs.mkdtempSync(path.join(os.tmpdir(), "ocrat-icon-"));
   const iconset = path.join(parent, "icon.iconset");
   fs.mkdirSync(iconset);
   try {
     for (const size of [16, 32, 128, 256, 512]) {
-      quiet("sips", ["-z", String(size), String(size), source, "--out", path.join(iconset, `icon_${size}x${size}.png`)]);
-      quiet("sips", ["-z", String(size * 2), String(size * 2), source, "--out", path.join(iconset, `icon_${size}x${size}@2x.png`)]);
+      fs.writeFileSync(
+        path.join(iconset, `icon_${size}x${size}.png`),
+        encodePng(size, rounded(rgba, width, height, size))
+      );
+      const retina = size * 2;
+      fs.writeFileSync(
+        path.join(iconset, `icon_${size}x${size}@2x.png`),
+        encodePng(retina, rounded(rgba, width, height, retina))
+      );
     }
     quiet("iconutil", ["-c", "icns", iconset, "-o", destination]);
   } finally {
@@ -213,24 +264,26 @@ function writeIcns(source, destination) {
   }
 }
 
-function main() {
+export function buildIcons() {
   const iconDir = path.join(root, "resources", "icons");
   const sourcePath = path.join(iconDir, "icon-source.png");
   if (!fs.existsSync(sourcePath)) {
     throw new Error(`Missing ${sourcePath}`);
   }
   const { width, height, rgba } = decodePng(fs.readFileSync(sourcePath));
-  const square = (size) => encodePng(size, resize(rgba, width, height, size, size));
+  const square = (size) => encodePng(size, rounded(rgba, width, height, size));
   fs.writeFileSync(path.join(iconDir, "appIcon.png"), square(256));
   fs.writeFileSync(path.join(iconDir, "icon.ico"), ico([16, 32, 48, 256].map((size) => ({
     size,
     png: square(size)
   }))));
-  writeIcns(sourcePath, path.join(iconDir, "icon.icns"));
+  const icns = path.join(iconDir, "icon.icns");
+  writeIcns(rgba, width, height, icns);
   console.log(`icons: ${width}x${height} source`);
+  return icns;
 }
 
 const entry = process.argv[1];
 if (entry && import.meta.url === pathToFileURL(path.resolve(entry)).href) {
-  main();
+  buildIcons();
 }

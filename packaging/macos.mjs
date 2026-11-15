@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { ensureDir, firstExisting, readConfig, root, run, runNeu } from "./common.mjs";
+import { buildIcons } from "./icons.mjs";
 
 const config = readConfig();
 const version = config.version;
@@ -32,8 +33,8 @@ fs.writeFileSync(path.join(contents, "Info.plist"), `<?xml version="1.0" encodin
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>CFBundleName</key><string>ocrat</string>
-  <key>CFBundleDisplayName</key><string>ocrat</string>
+  <key>CFBundleName</key><string>OCRat</string>
+  <key>CFBundleDisplayName</key><string>OCRat</string>
   <key>CFBundleIdentifier</key><string>${config.applicationId}</string>
   <key>CFBundleVersion</key><string>${version}</string>
   <key>CFBundleShortVersionString</key><string>${version}</string>
@@ -47,16 +48,7 @@ fs.writeFileSync(path.join(contents, "Info.plist"), `<?xml version="1.0" encodin
 </plist>
 `);
 
-const iconset = path.join(stage, "icon.iconset");
-ensureDir(iconset);
-const source = path.join(root, "resources", "icons", "icon-source.png");
-if (!fs.existsSync(source)) throw new Error(`Missing ${source}. Run npm run icons after adding the icon artwork.`);
-for (const size of [16, 32, 128, 256, 512]) {
-  run("sips", ["-z", String(size), String(size), source, "--out", path.join(iconset, `icon_${size}x${size}.png`)]);
-  run("sips", ["-z", String(size * 2), String(size * 2), source, "--out", path.join(iconset, `icon_${size}x${size}@2x.png`)]);
-}
-const icns = path.join(root, "resources", "icons", "icon.icns");
-run("iconutil", ["-c", "icns", iconset, "-o", icns]);
+const icns = buildIcons();
 fs.copyFileSync(icns, path.join(resources, "icon.icns"));
 run("xattr", ["-cr", app]);
 run("codesign", ["--force", "--sign", "-", path.join(macos, "ocrat-ocr")]);
@@ -72,7 +64,7 @@ const release = path.join(root, "dist", "release");
 ensureDir(release);
 const dmg = path.join(release, `ocrat-${version}-mac-arm64.dmg`);
 const zip = path.join(release, `ocrat-${version}-mac-arm64.app.zip`);
-run("hdiutil", ["create", "-volname", "ocrat", "-srcfolder", dmgRoot, "-ov", "-format", "UDZO", dmg]);
+run("hdiutil", ["create", "-volname", "OCRat", "-srcfolder", dmgRoot, "-ov", "-format", "UDZO", dmg]);
 run("ditto", ["--norsrc", "--noextattr", "--noqtn", "--noacl", "-c", "-k", "--keepParent", app, zip], { COPYFILE_DISABLE: "1" });
 
 runNeu(["builder", "dmg", "--arm64"]);

@@ -1,6 +1,6 @@
 {
   "name": "ocrat",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Local desktop OCR for macOS Apple Silicon and Windows x64",
   "scripts": {

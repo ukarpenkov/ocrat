@@ -4,8 +4,8 @@ function apply(theme) {
   const dark = theme === "dark";
   document.documentElement.dataset.theme = dark ? "dark" : "light";
   const button = themeButton();
-  button.textContent = dark ? "Тёмная" : "Светлая";
   button.setAttribute("aria-pressed", dark ? "true" : "false");
+  button.setAttribute("aria-label", dark ? "Тёмная тема" : "Светлая тема");
 }
 
 export async function loadTheme() {
@@ -23,6 +23,7 @@ export function bindTheme() {
   themeButton().addEventListener("click", async () => {
     const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
     apply(next);
+    if (!window.NL_PORT) return;
     await Neutralino.storage.setData("theme", next);
   });
 }
