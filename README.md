@@ -1,37 +1,40 @@
 # ocrat
 
-Local OCR for a screenshot or image file. The image stays on the machine. Version 1.0.1.
+Local OCR for a screenshot or an image file. The picture stays on the computer. Version 1.5.0.
 
-macOS Apple Silicon (arm64) and Windows x64. Russian and English are read in one pass. Input: clipboard image, file dialog, or drag-and-drop (`png`, `jpg`, `jpeg`, `gif`, `webp`, `bmp`, `tif`, `tiff`, `heic`, `heif`). The result is editable text; Copy writes it to the clipboard.
+macOS Apple Silicon (arm64) and Windows x64. Russian and English are read in one pass. Paste a screenshot, choose a file, or drop it on the window. The text can be edited. Copy writes it to the clipboard.
+
+Close, minimize, and zoom are the system window buttons. macOS draws them in the title bar. Windows draws them on the caption bar.
 
 ## Download
 
-[v1.0.1](https://github.com/ukarpenkov/ocrat/releases/tag/v1.0.1)
+[Release 1.5.0](https://github.com/ukarpenkov/ocrat/releases/tag/v1.5.0)
 
-- [ocrat-1.0.1-mac-arm64.dmg](https://github.com/ukarpenkov/ocrat/releases/download/v1.0.1/ocrat-1.0.1-mac-arm64.dmg)
-- [ocrat-1.0.1-mac-arm64.app.zip](https://github.com/ukarpenkov/ocrat/releases/download/v1.0.1/ocrat-1.0.1-mac-arm64.app.zip)
-- [ocrat-1.0.1-win-x64-setup.exe](https://github.com/ukarpenkov/ocrat/releases/download/v1.0.1/ocrat-1.0.1-win-x64-setup.exe)
-- [ocrat-1.0.1-win-x64.zip](https://github.com/ukarpenkov/ocrat/releases/download/v1.0.1/ocrat-1.0.1-win-x64.zip)
+- Windows installer: [ocrat-1.5.0-win-x64-setup.exe](https://github.com/ukarpenkov/ocrat/releases/download/v1.5.0/ocrat-1.5.0-win-x64-setup.exe)
+- Mac package: [ocrat-1.5.0-mac-arm64.dmg](https://github.com/ukarpenkov/ocrat/releases/download/v1.5.0/ocrat-1.5.0-mac-arm64.dmg)
+
+The same release also has a portable Windows zip and a zipped Mac app:
+
+- [ocrat-1.5.0-win-x64.zip](https://github.com/ukarpenkov/ocrat/releases/download/v1.5.0/ocrat-1.5.0-win-x64.zip)
+- [ocrat-1.5.0-mac-arm64.app.zip](https://github.com/ukarpenkov/ocrat/releases/download/v1.5.0/ocrat-1.5.0-mac-arm64.app.zip)
 
 Builds are unsigned. Gatekeeper and SmartScreen warn before a downloaded copy starts. The `.app` and the Windows zip include `ocrat-ocr` next to the main executable.
 
 ## Stack
 
-- [Neutralinojs](https://neutralino.js.org/) 6.10.0 — window, system webview, filesystem, clipboard, and process API. CLI: `@neutralinojs/neu` 11.8.0. Packages: `@neutralinojs-contrib/builder`.
-- UI — HTML, CSS, and JavaScript in `resources/`. Node.js 22 is used to build and package.
-- macOS adapter `ocrat-ocr` — Swift executable (`adapters/macos`). Apple Vision `VNRecognizeTextRequest` (`ru-RU`, `en-US`), ImageIO, CoreGraphics. macOS 13+.
-- Windows adapter `ocrat-ocr.exe` — C++20 and C++/WinRT (`adapters/windows`). `Windows.Media.Ocr` with the Russian and English engines. CMake 3.24, Windows SDK `cppwinrt`.
+- [Neutralinojs](https://neutralino.js.org/) 6.10.0 — window, system webview, filesystem, clipboard, and process API. CLI: `@neutralinojs/neu` 11.8.0.
+- UI — HTML, CSS, and JavaScript in `resources/`. Node.js 22 builds and packages the app.
+- macOS adapter `ocrat-ocr` — Swift (`adapters/macos`). Apple Vision, Russian and English. macOS 13+.
+- Windows adapter `ocrat-ocr.exe` — C++20 and C++/WinRT (`adapters/windows`). `Windows.Media.Ocr`, Russian and English.
 
-## Run from a GitHub clone
+## Build
 
 ```bash
 git clone https://github.com/ukarpenkov/ocrat.git
 cd ocrat
 ```
 
-### macOS Apple Silicon
-
-Node.js 22, Xcode Command Line Tools, Swift.
+macOS Apple Silicon needs Node.js 22, Xcode Command Line Tools, and Swift.
 
 ```bash
 npm ci
@@ -42,16 +45,14 @@ npx neu plugins --add @neutralinojs-contrib/builder
 npm run dev
 ```
 
-`.app` and `.dmg` in `dist/release/`:
+`.app` and `.dmg` land in `dist/release/`:
 
 ```bash
 npm run build
 npm run package:mac
 ```
 
-### Windows x64
-
-Node.js 22, Visual Studio 2022 with C++ and the Windows SDK, CMake, NSIS.
+Windows x64 needs Node.js 22, Visual Studio 2022 with C++ and the Windows SDK, CMake, and NSIS.
 
 ```powershell
 npm ci
@@ -63,6 +64,6 @@ npm run build
 npm run package:win
 ```
 
-Portable zip and NSIS installer land in `dist/release/`.
+The portable zip and the NSIS installer land in `dist/release/`.
 
-Tag `v*.*.*` runs [.github/workflows/release.yml](.github/workflows/release.yml): macOS arm64 on `macos-15`, Windows x64 on `windows-2022`.
+A tag `v*.*.*` runs [.github/workflows/release.yml](.github/workflows/release.yml): macOS arm64 on `macos-15`, Windows x64 on `windows-2022`.

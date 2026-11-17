@@ -41,8 +41,7 @@ body {
 
 body {
   margin: 0;
-  padding: 14px;
-  background: transparent;
+  background: var(--bg);
   color: var(--fg);
   font: 15px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -52,12 +51,8 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
   background: var(--bg);
   overflow: hidden;
-  box-shadow:
-    0 0 0 0.5px rgba(0, 0, 0, 0.22),
-    0 16px 44px rgba(0, 0, 0, 0.18);
 }
 
 header {
@@ -92,119 +87,6 @@ h1 {
   line-height: 1;
   font-weight: 700;
   letter-spacing: -0.03em;
-}
-
-.traffic {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: none;
-}
-
-.traffic button {
-  width: 12px;
-  height: 12px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font: 700 9px/1 -apple-system, BlinkMacSystemFont, sans-serif;
-  color: rgba(0, 0, 0, 0.55);
-  cursor: default;
-}
-
-.traffic button::after {
-  content: "";
-}
-
-.traffic:hover #close::after {
-  content: "×";
-}
-
-.traffic:hover #minimize::after {
-  content: "–";
-}
-
-.traffic:hover #zoom::after {
-  content: "+";
-}
-
-#close {
-  background: #ff5f57;
-}
-
-#minimize {
-  background: #febc2e;
-}
-
-#zoom {
-  background: #28c840;
-}
-
-#close:active {
-  background: #e0443e;
-}
-
-#minimize:active {
-  background: #e2a614;
-}
-
-#zoom:active {
-  background: #1fa834;
-}
-
-html[data-os="windows"] .traffic {
-  order: 2;
-  gap: 2px;
-}
-
-html[data-os="windows"] #theme {
-  order: 1;
-}
-
-html[data-os="windows"] .traffic button {
-  width: 32px;
-  height: 28px;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--fg);
-  font: 400 13px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-html[data-os="windows"] #close::after,
-html[data-os="windows"] #minimize::after,
-html[data-os="windows"] #zoom::after {
-  content: "";
-}
-
-html[data-os="windows"] #minimize::after {
-  content: "–";
-}
-
-html[data-os="windows"] #zoom::after {
-  content: "□";
-}
-
-html[data-os="windows"] #close::after {
-  content: "×";
-}
-
-html[data-os="windows"] .traffic button:hover,
-html[data-os="windows"] .traffic button:active {
-  background: rgba(127, 127, 127, 0.16);
-}
-
-html[data-os="windows"] #minimize {
-  order: 1;
-}
-
-html[data-os="windows"] #zoom {
-  order: 2;
-}
-
-html[data-os="windows"] #close {
-  order: 3;
 }
 
 #theme {

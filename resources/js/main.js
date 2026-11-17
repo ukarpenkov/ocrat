@@ -161,31 +161,10 @@ function closeApp() {
   setTimeout(finish, 100);
 }
 
-function bindChrome() {
-  const stop = (event) => event.stopPropagation();
-  document.querySelector("#close").addEventListener("click", (event) => {
-    stop(event);
-    closeApp();
-  });
-  document.querySelector("#minimize").addEventListener("click", (event) => {
-    stop(event);
-    Neutralino.window.minimize();
-  });
-  document.querySelector("#zoom").addEventListener("click", async (event) => {
-    stop(event);
-    if (await Neutralino.window.isMaximized()) await Neutralino.window.unmaximize();
-    else await Neutralino.window.maximize();
-  });
-  Neutralino.window.setDraggableRegion("titlebar", {
-    exclude: ["traffic", "theme"]
-  });
-}
-
 bind();
 if (window.NL_PORT) {
   Neutralino.init();
   Neutralino.events.on("windowClose", closeApp);
   startAdapterEvents();
-  bindChrome();
   loadTheme();
 }

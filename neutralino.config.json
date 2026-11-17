@@ -1,7 +1,7 @@
 {
   "applicationId": "js.ocrat.app",
   "applicationName": "ocrat",
-  "version": "1.0.1",
+  "version": "1.5.0",
   "author": "ocrat",
   "description": "Local OCR for a screenshot or image file",
   "copyright": "Copyright (c) 2026 ocrat",
@@ -38,13 +38,7 @@
     "clipboard.readImage",
     "clipboard.writeText",
     "app.exit",
-    "app.killProcess",
-    "window.beginDrag",
-    "window.minimize",
-    "window.unminimize",
-    "window.maximize",
-    "window.unmaximize",
-    "window.isMaximized"
+    "app.killProcess"
   ],
   "commandAllowList": [
     "*ocrat-ocr",
@@ -62,8 +56,8 @@
       "enableInspector": false,
       "exitProcessOnClose": false,
       "useSavedState": false,
-      "borderless": true,
-      "transparent": true,
+      "borderless": false,
+      "transparent": false,
       "maximize": false,
       "hidden": false
     }
