@@ -1,12 +1,37 @@
 # ocrat
 
-Локальное распознавание текста на снимке. Картинка не уходит в сеть. Версия 1.0.1.
+Local OCR for a screenshot or image file. The image stays on the machine. Version 1.0.1.
 
-Ориентиры по скорости из [docs/about.md](docs/about.md) ещё не замерены. Пакеты из GitHub Release собраны CI и не проверялись запуском. Сборка Windows на машине разработки не выполняется и числится непроверенной. Подпись описана в [docs/signing.md](docs/signing.md).
+macOS Apple Silicon (arm64) and Windows x64. Russian and English are read in one pass. Input: clipboard image, file dialog, or drag-and-drop (`png`, `jpg`, `jpeg`, `gif`, `webp`, `bmp`, `tif`, `tiff`, `heic`, `heif`). The result is editable text; Copy writes it to the clipboard.
 
-## macOS Apple Silicon
+## Download
 
-Нужны Node.js 22, Xcode Command Line Tools и Swift.
+[v1.0.1](https://github.com/ukarpenkov/ocrat/releases/tag/v1.0.1)
+
+- [ocrat-1.0.1-mac-arm64.dmg](https://github.com/ukarpenkov/ocrat/releases/download/v1.0.1/ocrat-1.0.1-mac-arm64.dmg)
+- [ocrat-1.0.1-mac-arm64.app.zip](https://github.com/ukarpenkov/ocrat/releases/download/v1.0.1/ocrat-1.0.1-mac-arm64.app.zip)
+- [ocrat-1.0.1-win-x64-setup.exe](https://github.com/ukarpenkov/ocrat/releases/download/v1.0.1/ocrat-1.0.1-win-x64-setup.exe)
+- [ocrat-1.0.1-win-x64.zip](https://github.com/ukarpenkov/ocrat/releases/download/v1.0.1/ocrat-1.0.1-win-x64.zip)
+
+Builds are unsigned. Gatekeeper and SmartScreen warn before a downloaded copy starts. The `.app` and the Windows zip include `ocrat-ocr` next to the main executable.
+
+## Stack
+
+- [Neutralinojs](https://neutralino.js.org/) 6.10.0 — window, system webview, filesystem, clipboard, and process API. CLI: `@neutralinojs/neu` 11.8.0. Packages: `@neutralinojs-contrib/builder`.
+- UI — HTML, CSS, and JavaScript in `resources/`. Node.js 22 is used to build and package.
+- macOS adapter `ocrat-ocr` — Swift executable (`adapters/macos`). Apple Vision `VNRecognizeTextRequest` (`ru-RU`, `en-US`), ImageIO, CoreGraphics. macOS 13+.
+- Windows adapter `ocrat-ocr.exe` — C++20 and C++/WinRT (`adapters/windows`). `Windows.Media.Ocr` with the Russian and English engines. CMake 3.24, Windows SDK `cppwinrt`.
+
+## Run from a GitHub clone
+
+```bash
+git clone https://github.com/ukarpenkov/ocrat.git
+cd ocrat
+```
+
+### macOS Apple Silicon
+
+Node.js 22, Xcode Command Line Tools, Swift.
 
 ```bash
 npm ci
@@ -17,18 +42,16 @@ npx neu plugins --add @neutralinojs-contrib/builder
 npm run dev
 ```
 
-Пакеты `.app` и `.dmg`:
+`.app` and `.dmg` in `dist/release/`:
 
 ```bash
 npm run build
 npm run package:mac
 ```
 
-Файлы появляются в `dist/release/`: `ocrat-1.0.1-mac-arm64.app.zip` и `ocrat-1.0.1-mac-arm64.dmg`. Внутри `.app` рядом с программой лежит `ocrat-ocr`. Каталог `dist/builder-mac` — отдельный DMG плагина Neutralino без этого адаптера, в релиз он не входит.
+### Windows x64
 
-## Windows x64
-
-Нужны Node.js 22, Visual Studio 2022 с C++ и Windows SDK, CMake и NSIS.
+Node.js 22, Visual Studio 2022 with C++ and the Windows SDK, CMake, NSIS.
 
 ```powershell
 npm ci
@@ -40,10 +63,6 @@ npm run build
 npm run package:win
 ```
 
-Файлы появляются в `dist/release/`: `ocrat-1.0.1-win-x64.zip` (`ocrat.exe` и `ocrat-ocr.exe`) и `ocrat-1.0.1-win-x64-setup.exe`. Каталог `dist/builder-win` — установщик плагина Neutralino без адаптера, в релиз он не входит.
+Portable zip and NSIS installer land in `dist/release/`.
 
-`neu build` качает бинарники Neutralino для других систем. В релиз они не входят.
-
-## Релиз
-
-Тег `v1.0.1` запускает [.github/workflows/release.yml](.github/workflows/release.yml). macOS arm64 собирается на `macos-15` (образ `macos-14` снят), Windows x64 на `windows-2022`.
+Tag `v*.*.*` runs [.github/workflows/release.yml](.github/workflows/release.yml): macOS arm64 on `macos-15`, Windows x64 on `windows-2022`.
