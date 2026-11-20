@@ -1,6 +1,6 @@
 # ocrat
 
-Local OCR for a screenshot or an image file. The picture stays on the computer. Version 1.5.0.
+Local OCR for a screenshot or an image file. The picture stays on the computer. Version 2.0.0.
 
 macOS Apple Silicon (arm64) and Windows x64. Russian and English are read in one pass. Paste a screenshot, choose a file, or drop it on the window. The text can be edited. Copy writes it to the clipboard.
 
@@ -8,15 +8,15 @@ Close, minimize, and zoom are the system window buttons. macOS draws them in the
 
 ## Download
 
-[Release 1.5.0](https://github.com/ukarpenkov/ocrat/releases/tag/v1.5.0)
+[Release 2.0.0](https://github.com/ukarpenkov/ocrat/releases/tag/v2.0.0)
 
-- Windows installer: [ocrat-1.5.0-win-x64-setup.exe](https://github.com/ukarpenkov/ocrat/releases/download/v1.5.0/ocrat-1.5.0-win-x64-setup.exe)
-- Mac package: [ocrat-1.5.0-mac-arm64.dmg](https://github.com/ukarpenkov/ocrat/releases/download/v1.5.0/ocrat-1.5.0-mac-arm64.dmg)
+- Windows installer: [ocrat-2.0.0-win-x64-setup.exe](https://github.com/ukarpenkov/ocrat/releases/download/v2.0.0/ocrat-2.0.0-win-x64-setup.exe)
+- Mac package: [ocrat-2.0.0-mac-arm64.dmg](https://github.com/ukarpenkov/ocrat/releases/download/v2.0.0/ocrat-2.0.0-mac-arm64.dmg)
 
 The same release also has a portable Windows zip and a zipped Mac app:
 
-- [ocrat-1.5.0-win-x64.zip](https://github.com/ukarpenkov/ocrat/releases/download/v1.5.0/ocrat-1.5.0-win-x64.zip)
-- [ocrat-1.5.0-mac-arm64.app.zip](https://github.com/ukarpenkov/ocrat/releases/download/v1.5.0/ocrat-1.5.0-mac-arm64.app.zip)
+- [ocrat-2.0.0-win-x64.zip](https://github.com/ukarpenkov/ocrat/releases/download/v2.0.0/ocrat-2.0.0-win-x64.zip)
+- [ocrat-2.0.0-mac-arm64.app.zip](https://github.com/ukarpenkov/ocrat/releases/download/v2.0.0/ocrat-2.0.0-mac-arm64.app.zip)
 
 Builds are unsigned. Gatekeeper and SmartScreen warn before a downloaded copy starts. The `.app` and the Windows zip include `ocrat-ocr` next to the main executable.
 

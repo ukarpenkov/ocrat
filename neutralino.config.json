@@ -1,7 +1,7 @@
 {
   "applicationId": "js.ocrat.app",
   "applicationName": "ocrat",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "author": "ocrat",
   "description": "Local OCR for a screenshot or image file",
   "copyright": "Copyright (c) 2026 ocrat",
@@ -37,6 +37,7 @@
     "clipboard.getFormat",
     "clipboard.readImage",
     "clipboard.writeText",
+    "window.setMainMenu",
     "app.exit",
     "app.killProcess"
   ],

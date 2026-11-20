@@ -29,6 +29,54 @@ function syncCopy() {
   copy.disabled = result.value.length === 0;
 }
 
+function selectedResultText() {
+  const start = result.selectionStart;
+  const end = result.selectionEnd;
+  if (start == null || end == null || start === end) return "";
+  return result.value.slice(start, end);
+}
+
+function writeClipboard(text) {
+  return Neutralino.clipboard.writeText(text);
+}
+
+function plainCommand(event, code) {
+  return (event.metaKey || event.ctrlKey)
+    && !event.altKey
+    && !event.shiftKey
+    && !event.isComposing
+    && event.code === code;
+}
+
+function installMacEditMenu() {
+  if (window.NL_OS !== "Darwin") return;
+  // WKWebView receives Cmd+C only when the menu bar owns that shortcut.
+  // Paste is intentionally absent: Cmd+V still inserts a screenshot.
+  Neutralino.window.setMainMenu([
+    {
+      text: "OCRat",
+      menuItems: [
+        { id: "hide", text: "Скрыть OCRat", action: "hide:", shortcut: "h" },
+        { id: "hideOthers", text: "Скрыть остальные", action: "hideOtherApplications:" },
+        { id: "showAll", text: "Показать все", action: "unhideAllApplications:" },
+        { text: "-" },
+        { id: "quit", text: "Завершить OCRat", action: "terminate:", shortcut: "q" }
+      ]
+    },
+    {
+      text: "Правка",
+      menuItems: [
+        { id: "undo", text: "Отменить", action: "undo:", shortcut: "z" },
+        { id: "redo", text: "Повторить", action: "redo:", shortcut: "Z" },
+        { text: "-" },
+        { id: "cut", text: "Вырезать", action: "cut:", shortcut: "x" },
+        { id: "copy", text: "Копировать", action: "copy:", shortcut: "c" },
+        { id: "selectAll", text: "Выделить всё", action: "selectAll:", shortcut: "a" }
+      ]
+    }
+  ]).catch(() => {});
+}
+
 function setImage(blob, next) {
   if (previewUrl) URL.revokeObjectURL(previewUrl);
   previewUrl = URL.createObjectURL(blob);
@@ -139,16 +187,35 @@ function bind() {
     pasteClipboard();
   });
   window.addEventListener("keydown", (event) => {
+    if (document.activeElement === result && plainCommand(event, "KeyA")) {
+      event.preventDefault();
+      result.select();
+      return;
+    }
+    if (document.activeElement === result && plainCommand(event, "KeyC")) {
+      const text = selectedResultText();
+      if (!text) return;
+      event.preventDefault();
+      writeClipboard(text);
+      return;
+    }
     if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "v") return;
     if (document.activeElement === result) return;
     event.preventDefault();
     pasteClipboard();
   });
+  result.addEventListener("copy", (event) => {
+    const text = selectedResultText();
+    if (!text) return;
+    event.preventDefault();
+    if (event.clipboardData) event.clipboardData.setData("text/plain", text);
+    writeClipboard(text);
+  });
   recognize.addEventListener("click", () => {
     runRecognition();
   });
   copy.addEventListener("click", async () => {
-    await Neutralino.clipboard.writeText(result.value);
+    await writeClipboard(result.value);
   });
   result.addEventListener("input", syncCopy);
 }
@@ -167,4 +234,5 @@ if (window.NL_PORT) {
   Neutralino.events.on("windowClose", closeApp);
   startAdapterEvents();
   loadTheme();
+  installMacEditMenu();
 }
